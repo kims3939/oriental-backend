@@ -1,7 +1,20 @@
 const Router = require('koa-router');
 const ctrl = require('./cases.ctrl');
+const multer = require('@koa/multer');
 
 const cases = new Router();
+
+const storage = multer.diskStorage({
+    destination:(req, file, cb) => {
+        cb(null, './images');
+    },
+    filename:(req, file, cb) => {
+        console.log(file);
+        cb(null,Date.now()+'_'+file.originalname);
+    }
+});
+
+const upload = multer({storage:storage});
 
 //Get case list
 cases.get('/', ctrl.getCaseList);
@@ -10,7 +23,7 @@ cases.get('/', ctrl.getCaseList);
 cases.post('/', ctrl.postCase);
 
 //Upload case images
-cases.post('/images', ctrl.postImages);
+cases.post('/images', upload.array('images',10), ctrl.postImages);
 
 //Update specific case
 cases.patch('/:id', ctrl.updateCase);

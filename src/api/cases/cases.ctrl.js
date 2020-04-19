@@ -72,14 +72,12 @@ data = [
     }
 ];
 
-
 exports.getCaseList = ctx => {
     ctx.body = data;
 };
 
 exports.postImages = ctx => {
-    const files = ctx.request.files.file;
-    ctx.body = 'done';
+    ctx.body = ctx.files.map( file => file.filename);
 };
 
 exports.postCase = ctx => {
