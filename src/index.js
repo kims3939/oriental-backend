@@ -2,6 +2,7 @@ const Koa = require('koa');
 const serve = require('koa-static');
 const Router = require('koa-router');
 const bodyparser = require('koa-bodyparser');
+const mongoose = require('mongoose');
 
 const app = new Koa();
 const router = new Router();
@@ -14,4 +15,13 @@ app.use(serve('images/'));
 app.use(router.routes())
 app.use(router.allowedMethods());
 
-app.listen(4000);
+mongoose.connect('mongodb://localhost/oriental',{useNewUrlParser:true, useUnifiedTopology: true});
+const db = mongoose.connection;
+db.on('error', e => console.error(e));
+db.once('open', ()=> {
+    console.log('db connected');
+});
+
+app.listen(4000, () => {
+    console.log('server listening on 4000');
+});

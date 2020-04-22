@@ -5,7 +5,7 @@ const UserSchema = Schema({
     username:String,
     email:String,
     password:String,
-    speciality:[String]
+    speciality:String
 });
 
 module.exports = UserSchema;

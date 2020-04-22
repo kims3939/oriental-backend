@@ -5,9 +5,10 @@ const UserSchema = require('./UserSchema');
 const CommentSchema = require('./CommentSchema');
 
 const CaseSchema = Schema({
+    id:String,
     writer:UserSchema,
     title:String,
-    categoris:[String],
+    categories:[String],
     images:[String],
     caseText:String,
     likes:Number,

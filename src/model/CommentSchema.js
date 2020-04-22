@@ -7,7 +7,10 @@ const CommentSchema = Schema();
 CommentSchema.add({
     writer:UserSchema,
     comment:String,
-    likes:Number,
+    likes:{
+        type:Number,
+        default:0
+    },
     reply:[CommentSchema]
 });
 

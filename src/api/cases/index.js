@@ -31,4 +31,13 @@ cases.patch('/:id', ctrl.updateCase);
 //Delete specific case
 cases.delete('/:id', ctrl.removeCase);
 
+//Write Comment
+cases.post('/comment/:id', ctrl.postComment);
+
+//Update Comment
+cases.patch('/comment/:id', ctrl.updateComment);
+
+//Remove Comment
+cases.delete('/comment/:id', ctrl.removeComment);
+
 module.exports = cases;
