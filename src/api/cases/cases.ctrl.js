@@ -31,7 +31,7 @@ exports.postCase = async ctx => {
         images,
         caseText,
         likes,
-        views
+        views,
     });
 
     await newCase.save()
@@ -50,13 +50,15 @@ exports.postCase = async ctx => {
 };
 
 exports.updateCase = async ctx => {
-    const { _id, title, categories, images, caseText } = ctx.request.body;
-    await caseModel.findByIdAndUpdate(id, {
-        title,
-        categories,
-        images,
-        caseText
-    })
+    const { case_id, title, categories, images, caseText } = ctx.request.body;
+    await caseModel.findOneAndUpdate(
+        {_id:case_id}, 
+        {
+            title,
+            categories,
+            images,
+            caseText
+        })
     .then(() => {
         ctx.body = {
             status:'success',
@@ -72,8 +74,28 @@ exports.updateCase = async ctx => {
 };
 
 exports.removeCase = async ctx => {
-    const { _id } = ctx.request.body;
-    await caseModel.findByIdAndDelete(_id)
+    const { case_id } = ctx.request.body;
+    await caseModel.findOneAndRemove({_id: case_id})
+    .then(() => {
+        ctx.body = {
+            status:'success',
+            payload:null
+        }
+    })
+    .catch( e => {
+        ctx.body = {
+            status:'error',
+            payload:e
+        }
+    });
+};
+
+exports.increaseLike = ctx => {
+    const { case_id, userInfo } = ctx.request.body;
+    await caseModel.findOneAndUpdate(
+        {_id, case_id},
+        { $inc: {likes:1}}
+    )
     .then(() => {
         ctx.body = {
             status:'success',
@@ -88,14 +110,7 @@ exports.removeCase = async ctx => {
     });
 };
 
-exports.postComment = async ctx => {
-    
+exports.updateView = ctx => {
+    //나중에 할래
 };
 
-exports.updateComment = async ctx => {
-   
-};
-
-exports.removeComment = async ctx => {
-    
-};

@@ -11,7 +11,10 @@ const CaseSchema = Schema({
     categories:[String],
     images:[String],
     caseText:String,
-    likes:Number,
+    likes:{
+        type:[UserSchema],
+        default:[]
+    },
     views:Number,
     comments:[CommentSchema]
 });

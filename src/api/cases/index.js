@@ -1,5 +1,7 @@
 const Router = require('koa-router');
-const ctrl = require('./cases.ctrl');
+const caseCtrl = require('./cases.ctrl');
+const commentCtrl = require('./comment.ctrl');
+
 const multer = require('@koa/multer');
 
 const cases = new Router();
@@ -17,27 +19,32 @@ const storage = multer.diskStorage({
 const upload = multer({storage:storage});
 
 //Get case list
-cases.get('/', ctrl.getCaseList);
+cases.get('/', caseCtrl.getCaseList);
 
 //Upload new case
-cases.post('/', ctrl.postCase);
+cases.post('/', caseCtrl.postCase);
 
 //Upload case images
-cases.post('/images', upload.array('images',10), ctrl.postImages);
+cases.post('/images', upload.array('images',10), caseCtrl.postImages);
 
 //Update specific case
-cases.patch('/:id', ctrl.updateCase);
+cases.patch('/', caseCtrl.updateCase);
+
+//Increase specific case's view count
+cases.patch('/like', caseCtrl.increaseLike);
 
 //Delete specific case
-cases.delete('/:id', ctrl.removeCase);
+cases.delete('/', caseCtrl.removeCase);
+
+
 
 //Write Comment
-cases.post('/comment/:id', ctrl.postComment);
+cases.post('/comment', commentCtrl.postComment);
 
 //Update Comment
-cases.patch('/comment/:id', ctrl.updateComment);
+cases.patch('/comment', commentCtrl.updateComment);
 
 //Remove Comment
-cases.delete('/comment/:id', ctrl.removeComment);
+cases.delete('/comment', commentCtrl.removeComment);
 
 module.exports = cases;

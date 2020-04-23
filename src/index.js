@@ -15,7 +15,8 @@ app.use(serve('images/'));
 app.use(router.routes())
 app.use(router.allowedMethods());
 
-mongoose.connect('mongodb://localhost/oriental',{useNewUrlParser:true, useUnifiedTopology: true});
+mongoose.connect('mongodb://localhost/oriental',{useNewUrlParser:true, useUnifiedTopology: true, useFindAndModify: false});
+
 const db = mongoose.connection;
 db.on('error', e => console.error(e));
 db.once('open', ()=> {

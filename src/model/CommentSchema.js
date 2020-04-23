@@ -11,7 +11,10 @@ CommentSchema.add({
         type:Number,
         default:0
     },
-    reply:[CommentSchema]
+    reply:{
+        type:[CommentSchema],
+        default:[]
+    }
 });
 
 module.exports = CommentSchema;
