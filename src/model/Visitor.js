@@ -7,8 +7,7 @@ const VisitorSchema = Schema({
     visitors:{
         type:[String],
         default:[]
-    },
-
+    }
 });
 
 module.exports = VisitorSchema;
