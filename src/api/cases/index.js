@@ -30,13 +30,14 @@ cases.post('/images', upload.array('images',10), caseCtrl.postImages);
 //Update specific case
 cases.patch('/', caseCtrl.updateCase);
 
-//Increase specific case's view count
-cases.patch('/like', caseCtrl.increaseLike);
+//Like specific case
+cases.patch('/like', caseCtrl.like);
+
+//Unlike specific case
+cases.patch('/unlike', caseCtrl.unlike);
 
 //Delete specific case
 cases.delete('/', caseCtrl.removeCase);
-
-
 
 //Write Comment
 cases.post('/comment', commentCtrl.postComment);

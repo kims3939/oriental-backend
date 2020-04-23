@@ -5,15 +5,19 @@ const UserSchema = require('./UserSchema');
 const CommentSchema = Schema();
 
 CommentSchema.add({
+    _id:String,
     writer:UserSchema,
-    comment:String,
+    comment:{
+        type:String,
+        default:""
+    },
     likes:{
         type:Number,
         default:0
     },
-    reply:{
-        type:[CommentSchema],
-        default:[]
+    timestamp:{ 
+        type: Date,
+        default:Date.now
     }
 });
 

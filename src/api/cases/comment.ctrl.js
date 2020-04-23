@@ -1,6 +1,13 @@
+const mongoose = require('mongoose');
+const caseSchema = require('../../model/CaseSchema');
+const uniqeid = require('uniqid');
+const caseModel = mongoose.model('case',caseSchema);
+
 exports.postComment = async ctx => {
     const { case_id, writer, comment } = ctx.request.body;
+    const _id = uniqeid('comment-');
     const commentObj = {
+        _id,
         writer,
         comment
     };
@@ -20,7 +27,6 @@ exports.postComment = async ctx => {
                 payload:e
             }
         });
-
 };
 
 exports.updateComment = async ctx => {

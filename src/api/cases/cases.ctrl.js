@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const caseSchema = require('../../model/CaseSchema');
+const uniqeid = require('uniqid');
 const caseModel = mongoose.model('case',caseSchema);
 
 exports.getCaseList = async ctx => {
@@ -24,7 +25,9 @@ exports.postImages = async ctx => {
 
 exports.postCase = async ctx => {
     const { title, writer, categories, images, caseText, likes, views } = ctx.request.body;
+    const _id = uniqeid('case-');
     const newCase = new caseModel({
+        _id,
         title,
         writer,
         categories,
@@ -90,11 +93,38 @@ exports.removeCase = async ctx => {
     });
 };
 
-exports.increaseLike = ctx => {
-    const { case_id, userInfo } = ctx.request.body;
+
+exports.like = async ctx => {
+    const { case_id, liker } = ctx.request.body;
     await caseModel.findOneAndUpdate(
-        {_id, case_id},
-        { $inc: {likes:1}}
+        {_id:case_id},
+        { 
+            $inc:  {likes:1},
+            $addToSet: {likers: liker}
+        }
+    )
+    .then(() => {
+        ctx.body = {
+            status:'success',
+            payload:null
+        }
+    })
+    .catch(e => {
+        ctx.body = {
+            status:'error',
+            payload:e
+        }
+    });
+};
+
+exports.unlike = async ctx => {
+    const { case_id, liker } = ctx.request.body;
+    await caseModel.findOneAndUpdate(
+        {_id:case_id},
+        { 
+            $inc:  {likes:-1},
+            $pull: {likers: liker}
+        }
     )
     .then(() => {
         ctx.body = {

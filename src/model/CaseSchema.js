@@ -5,18 +5,44 @@ const UserSchema = require('./UserSchema');
 const CommentSchema = require('./CommentSchema');
 
 const CaseSchema = Schema({
-    id:String,
+    _id:String,
     writer:UserSchema,
-    title:String,
-    categories:[String],
-    images:[String],
-    caseText:String,
-    likes:{
+    title:{
+        type:String,
+        default:""
+    },
+    categories:{
+        type:[String],
+        default:[]
+    },
+    images:{
+        type:[String],
+        default:[]
+    },
+    caseText:{
+        type:String,
+        default:""
+    },
+    likers:{
         type:[UserSchema],
         default:[]
     },
-    views:Number,
-    comments:[CommentSchema]
+    views:{
+        type:Number,
+        default:0
+    },
+    likes:{
+        type:Number,
+        default:0
+    },
+    comments:{
+        type:[CommentSchema],
+        default:[]
+    },
+    timestamp:{ 
+        type: Date,
+        default:Date.now
+    }
 });
 
 module.exports = CaseSchema;
