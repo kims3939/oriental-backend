@@ -5,6 +5,7 @@ const caseModel = mongoose.model('case',caseSchema);
 
 exports.postComment = async ctx => {
     const { case_id, writer, comment } = ctx.request.body;
+    console.log(case_id, writer, comment);
     const _id = uniqeid('comment-');
     const commentObj = {
         _id,

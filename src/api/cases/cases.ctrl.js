@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const caseSchema = require('../../model/CaseSchema');
 const uniqeid = require('uniqid');
 const caseModel = mongoose.model('case',caseSchema);
+const fs = require('fs');
 
 exports.getCaseList = async ctx => {
     await caseModel.find()
@@ -19,12 +20,12 @@ exports.getCaseList = async ctx => {
     });
 };
 
-exports.postImages = async ctx => {
+exports.postImages = ctx => {
     ctx.body = ctx.files.map( file => file.filename);
 };
 
 exports.postCase = async ctx => {
-    const { title, writer, categories, images, caseText, likes, views } = ctx.request.body;
+    const { title, writer, categories, images, caseText } = ctx.request.body;
     const _id = uniqeid('case-');
     const newCase = new caseModel({
         _id,
@@ -32,9 +33,7 @@ exports.postCase = async ctx => {
         writer,
         categories,
         images,
-        caseText,
-        likes,
-        views,
+        caseText
     });
 
     await newCase.save()
@@ -49,6 +48,13 @@ exports.postCase = async ctx => {
             status:'error',
             payload:e
         }
+    });
+};
+
+exports.removeImage = ctx => {
+    const { images } = ctx.request.query;
+    images.forEach( image => {
+        fs.unlink('images/'+image, err => console.log(err));
     });
 };
 
@@ -77,7 +83,18 @@ exports.updateCase = async ctx => {
 };
 
 exports.removeCase = async ctx => {
-    const { case_id } = ctx.request.body;
+    const { case_id } = ctx.request.query;
+    
+    await caseModel.findById({_id: case_id})
+    .then( doc => {
+        doc.images.forEach(image => {
+            fs.unlink('images/'+image, err => console.log(err));
+        });
+    })
+    .catch( err => {
+        console.log(err);
+    });
+    
     await caseModel.findOneAndRemove({_id: case_id})
     .then(() => {
         ctx.body = {
@@ -95,26 +112,49 @@ exports.removeCase = async ctx => {
 
 
 exports.like = async ctx => {
-    const { case_id, liker } = ctx.request.body;
-    await caseModel.findOneAndUpdate(
-        {_id:case_id},
-        { 
-            $inc:  {likes:1},
-            $addToSet: {likers: liker}
-        }
-    )
-    .then(() => {
-        ctx.body = {
-            status:'success',
-            payload:null
-        }
-    })
-    .catch(e => {
-        ctx.body = {
-            status:'error',
-            payload:e
-        }
-    });
+    const { case_id, liker, toggle } = ctx.request.body;
+    if(toggle){
+        await caseModel.findOneAndUpdate(
+            {_id:case_id},
+            { 
+                $inc:  {likes:1},
+                $addToSet: {likers: liker}
+            }
+        )
+        .then(() => {
+            ctx.body = {
+                status:'success',
+                payload:null
+            }
+        })
+        .catch(e => {
+            ctx.body = {
+                status:'error',
+                payload:e
+            }
+        });
+    }
+    else{
+        await caseModel.findOneAndUpdate(
+            {_id:case_id},
+            {
+                $inc:  {likes:-1},
+                $pull: {likers:{username:liker.username}}
+            }
+        )
+        .then(() => {
+            ctx.body ={
+                status:'success',
+                palyload:null
+            }
+        })
+        .catch(e => {
+            ctx.body = {
+                status:'error',
+                payload:e
+            }
+        });
+    }
 };
 
 exports.unlike = async ctx => {

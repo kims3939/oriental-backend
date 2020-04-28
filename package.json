@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/kims3939/oriental-backend#readme",
   "dependencies": {
+    "@koa/cors": "2",
     "@koa/multer": "^2.0.2",
     "koa": "^2.11.0",
     "koa-bodyparser": "^4.3.0",

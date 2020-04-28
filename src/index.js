@@ -1,6 +1,7 @@
 const Koa = require('koa');
 const serve = require('koa-static');
 const Router = require('koa-router');
+const cors = require('@koa/cors');
 const bodyparser = require('koa-bodyparser');
 const mongoose = require('mongoose');
 
@@ -10,6 +11,7 @@ const router = new Router();
 const api = require('./api');
 router.use('/api', api.routes());
 
+app.use(cors());
 app.use(bodyparser());
 app.use(serve('images/'));
 app.use(router.routes())

@@ -11,7 +11,6 @@ const storage = multer.diskStorage({
         cb(null, './images');
     },
     filename:(req, file, cb) => {
-        console.log(file);
         cb(null,Date.now()+'_'+file.originalname);
     }
 });
@@ -29,6 +28,9 @@ cases.post('/images', upload.array('images',10), caseCtrl.postImages);
 
 //Update specific case
 cases.patch('/', caseCtrl.updateCase);
+
+//Update case images
+//cases.post('/images', upload.array('images',10), caseCtrl.updateImages);
 
 //Like specific case
 cases.patch('/like', caseCtrl.like);
