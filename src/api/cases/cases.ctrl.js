@@ -51,15 +51,34 @@ exports.postCase = async ctx => {
     });
 };
 
-exports.removeImage = ctx => {
-    const { images } = ctx.request.query;
-    images.forEach( image => {
-        fs.unlink('images/'+image, err => console.log(err));
-    });
+exports.updateImages = ctx => {
+
+    const images = ctx.files;
+    const uploadedImages = ctx.request.body.uploadedImages;
+    
+    let imageList = [];
+    images.map( image => imageList.push(image.filename));
+    imageList = imageList.concat(uploadedImages);
+    ctx.body = {
+        status:'success',
+        payload:imageList
+    };
 };
 
 exports.updateCase = async ctx => {
     const { case_id, title, categories, images, caseText } = ctx.request.body;
+    console.log(case_id);
+    await caseModel.findById({_id:case_id})
+    .then(doc => {
+        const deleteImages = doc.images.filter( image => !images.include(image));
+        deleteImages.map(image => {
+            fs.unlink('images/'+image, err => console.log(err));
+        });
+    })
+    .catch( err => {
+        console.log(err);
+    });
+    
     await caseModel.findOneAndUpdate(
         {_id:case_id}, 
         {

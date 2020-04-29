@@ -24,13 +24,13 @@ cases.get('/', caseCtrl.getCaseList);
 cases.post('/', caseCtrl.postCase);
 
 //Upload case images
-cases.post('/images', upload.array('images',10), caseCtrl.postImages);
+cases.post('/images', upload.array('images'), caseCtrl.postImages);
 
 //Update specific case
 cases.patch('/', caseCtrl.updateCase);
 
 //Update case images
-//cases.post('/images', upload.array('images',10), caseCtrl.updateImages);
+cases.patch('/images', upload.array('images'), caseCtrl.updateImages);
 
 //Like specific case
 cases.patch('/like', caseCtrl.like);
