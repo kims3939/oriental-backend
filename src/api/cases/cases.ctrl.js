@@ -21,7 +21,10 @@ exports.getCaseList = async ctx => {
 };
 
 exports.postImages = ctx => {
-    ctx.body = ctx.files.map( file => file.filename);
+    ctx.body = {
+        status:'success',
+        payload:ctx.files.map( file => file.filename)
+    }
 };
 
 exports.postCase = async ctx => {
@@ -52,7 +55,6 @@ exports.postCase = async ctx => {
 };
 
 exports.updateImages = ctx => {
-
     const images = ctx.files;
     const uploadedImages = ctx.request.body.uploadedImages;
     
@@ -67,10 +69,9 @@ exports.updateImages = ctx => {
 
 exports.updateCase = async ctx => {
     const { case_id, title, categories, images, caseText } = ctx.request.body;
-    console.log(case_id);
     await caseModel.findById({_id:case_id})
     .then(doc => {
-        const deleteImages = doc.images.filter( image => !images.include(image));
+        const deleteImages = doc.images.filter( image => !images.includes(image));
         deleteImages.map(image => {
             fs.unlink('images/'+image, err => console.log(err));
         });

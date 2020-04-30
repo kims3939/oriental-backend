@@ -5,7 +5,6 @@ const caseModel = mongoose.model('case',caseSchema);
 
 exports.postComment = async ctx => {
     const { case_id, writer, comment } = ctx.request.body;
-    console.log(case_id, writer, comment);
     const _id = uniqeid('comment-');
     const commentObj = {
         _id,
@@ -51,7 +50,8 @@ exports.updateComment = async ctx => {
 };
 
 exports.removeComment = async ctx => {
-    const { case_id, comment_id } = ctx.request.body;
+    const { case_id, comment_id } = ctx.request.query;
+    console.log(case_id, comment_id);
     await caseModel.findOneAndUpdate(
         {_id: case_id},
         {$pull: {"comments": {"_id":comment_id}}}
