@@ -20,6 +20,9 @@ const upload = multer({storage:storage});
 //Get case list
 cases.get('/', caseCtrl.getCaseList);
 
+//Get a case
+cases.get('/:case_id', caseCtrl.getCase);
+
 //Upload new case
 cases.post('/', caseCtrl.postCase);
 

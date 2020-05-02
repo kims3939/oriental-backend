@@ -20,6 +20,20 @@ exports.getCaseList = async ctx => {
     });
 };
 
+exports.getCase = async ctx => {
+    const { case_id } = ctx.params;
+    await caseModel.findById(case_id)
+    .then( doc => {
+        ctx.body = {
+            status:'success',
+            payload:doc
+        }
+    })
+    .catch( err => {
+        console.log(err);
+    });
+};
+
 exports.postImages = ctx => {
     ctx.body = {
         status:'success',
